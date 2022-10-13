@@ -30,7 +30,7 @@
     <param name="calibration_mode" value="$(var calibration_mode)"/>
 
     <!-- filtering parameters -->
-    <param name="min_tag_size" value="0.6"/>
+    <param name="min_tag_size" value="0.4"/>
     <!--0.6 = 0.8 * 0.75 the apriltag size, not the lidartag-->
     <param name="max_tag_distance" value="20.0"/>
     <param name="max_allowed_homography_error" value="0.5"/>
