@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <arg name="mode"/>
-  <arg name="sensor_model"/>
-  <arg name="vehicle_model"/>
+  <arg name="sensor_model" default="nissan_leaf_sensor_kit"/>
+  <arg name="vehicle_model" default="nissan_leaf"/>
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
   <arg name="map_path" default="$(env HOME)/map/"/>
   <arg name="lanelet2_map_file" default="lanelet2_map.osm"/>
@@ -12,13 +12,12 @@
   <arg name="use_calibration_area_map" default="true"/>
 
   <!-- tag_based & interactive only -->
-  <arg name="camera_name" default=""/>
-  <!--e.g, camera6-->
+  <arg name="camera_name" default=""/> <!--e.g, camera6-->
   <arg name="calibration_rviz" default="true"/>
-  <arg name="decompress_images" default="true"/>
+  <arg name="decompress_images" default="false"/>
 
   <!-- interactive only -->
-  <arg name="interactive_use_concatenated" default="true"/>
+  <arg name="interactive_use_concatenated" default="false"/>
 
   <!-- logging simulator -->
   <include if="$(var logging_simulator)" file="$(find-pkg-share autoware_launch)/launch/logging_simulator.launch.xml">
@@ -40,7 +39,8 @@
   </include>
 
   <!-- fake transform -->
-  <node pkg="tf2_ros" exec="static_transform_publisher" name="map2base_link" output="screen" args="0 0 0 0 0 0 map base_link"/>
+  <node pkg="tf2_ros" exec="static_transform_publisher" name="map2base_link" output="screen" args="0 0 0 0 0 0 map base_link" />
+  <!--node pkg="tf2_ros" exec="static_transform_publisher" name="lidar_baselink2lidar_os1sensor" output="screen" args="0 0 0 0 0 0 lidar_os1/base_link lidar_os1/laser" /-->
 
   <!-- calibration_manager -->
   <group>
@@ -48,16 +48,9 @@
       <include file="$(find-pkg-share extrinsic_calibration_manager)/launch/$(var sensor_model)/manual.launch.xml">
         <arg name="vehicle_id" value="$(var vehicle_id)"/>
       </include>
-      <node pkg="rqt_reconfigure" exec="rqt_reconfigure" name="rqt_reconfigure" output="screen"/>
-      <node
-        pkg="rviz2"
-        exec="rviz2"
-        name="rviz2"
-        output="screen"
-        args="
-        -d $(find-pkg-share extrinsic_calibration_manager)/config/$(var sensor_model)/extrinsic_manual_calibration.rviz"
-        if="$(var calibration_rviz)"
-      />
+      <node pkg="rqt_reconfigure" exec="rqt_reconfigure" name="rqt_reconfigure" output="screen" />
+      <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="
+        -d $(find-pkg-share extrinsic_calibration_manager)/config/$(var sensor_model)/extrinsic_manual_calibration.rviz" if="$(var calibration_rviz)" />
     </group>
 
     <group if="$(eval &quot;'$(var mode)' == 'map_based' &quot;)">
@@ -68,6 +61,8 @@
         <arg name="use_calibration_area_map" value="$(var use_calibration_area_map)"/>
         <arg name="calibration_rviz" value="$(var calibration_rviz)"/>
       </include>
+      <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="
+        -d $(find-pkg-share extrinsic_map_based_calibrator)/config/map_based_calib.rviz" if="$(var calibration_rviz)" />
     </group>
 
     <group if="$(eval &quot;'$(var mode)' == 'tag_based' &quot;)">

@@ -2,7 +2,7 @@
 <launch>
   <arg name="vehicle_id" default="default"/>
 
-  <let name="sensor_model" value="aip_xx1"/>
+  <let name="sensor_model" value="nissan_leaf_sensor_kit"/>
   <let name="parent_frame" value="sensor_kit_base_link"/>
 
   <!-- extrinsic_calibration_client -->
@@ -17,102 +17,113 @@
   <!-- extrinsic_calibration_manager -->
   <node pkg="extrinsic_calibration_manager" exec="extrinsic_calibration_manager" name="extrinsic_calibration_manager" output="screen">
     <param name="parent_frame" value="$(var parent_frame)"/>
-    <param
-      name="child_frames"
-      value="
-    [camera0/camera_link,
-    camera1/camera_link,
-    camera2/camera_link,
-    camera3/camera_link,
-    camera4/camera_link,
-    camera5/camera_link,
-    traffic_light_right_camera/camera_link,
-    traffic_light_left_camera/camera_link,
-    velodyne_top_base_link,
-    velodyne_left_base_link,
-    velodyne_right_base_link,
-    gnss_link,
-    tamagawa/imu_link]"
+    <param 
+    name="child_frames"
+    value="
+    [
+    lidar_os1/sensor,
+    lidar_os2/sensor,
+    camera_front/camera_link]"
     />
   </node>
+
+  <!--
+    camera_rear/camera_link,
+    camera_front_left/camera_link,
+    camera_front_right/camera_link,
+    camera_rear_left/camera_link,
+    camera_rear_right/camera_link,
+    radar_front_left,
+    radar_front_right,
+    radar_rear_left,
+    radar_rear_right,
+    adma/gnss_link
+  -->
 
   <!-- extrinsic_manual_calibrator -->
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera0/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/lidar_os1/sensor"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera0/camera_link"/>
+    <arg name="child_frame" value="lidar_os1/sensor"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera1/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/lidar_os2/sensor"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera1/camera_link"/>
+    <arg name="child_frame" value="lidar_os2/sensor"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera2/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/camera_front/camera_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera2/camera_link"/>
+    <arg name="child_frame" value="camera_front/camera_link"/>
+  </include>
+
+  <!--include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
+    <arg name="ns" value="$(var parent_frame)/camera_rear/camera_link"/>
+    <arg name="parent_frame" value="$(var parent_frame)"/>
+    <arg name="child_frame" value="camera_rear/camera_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera3/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/camera_front_left/camera_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera3/camera_link"/>
+    <arg name="child_frame" value="camera_front_left/camera_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera4/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/camera_front_right/camera_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera4/camera_link"/>
+    <arg name="child_frame" value="camera_front_right/camera_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/camera5/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/camera_rear_left/camera_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="camera5/camera_link"/>
+    <arg name="child_frame" value="camera_rear_left/camera_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/traffic_light_right_camera/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/camera_rear_right/camera_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="traffic_light_right_camera/camera_link"/>
+    <arg name="child_frame" value="camera_rear_right/camera_link"/>
+  </include-->
+
+  <!--include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
+    <arg name="ns" value="$(var parent_frame)/radar_front_left/base_link"/>
+    <arg name="parent_frame" value="$(var parent_frame)"/>
+    <arg name="child_frame" value="radar_front_left/base_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/traffic_light_left_camera/camera_link"/>
+    <arg name="ns" value="$(var parent_frame)/radar_front_right/base_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="traffic_light_left_camera/camera_link"/>
+    <arg name="child_frame" value="radar_front_right/base_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/velodyne_top_base_link"/>
+    <arg name="ns" value="$(var parent_frame)/radar_rear_left/base_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="velodyne_top_base_link"/>
+    <arg name="child_frame" value="radar_rear_left/base_link"/>
   </include>
 
   <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/velodyne_left_base_link"/>
+    <arg name="ns" value="$(var parent_frame)/radar_rear_right/base_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="velodyne_left_base_link"/>
-  </include>
+    <arg name="child_frame" value="radar_rear_right/base_link"/>
+  </include-->
 
-  <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/velodyne_right_base_link"/>
+  <!--include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
+    <arg name="ns" value="$(var parent_frame)/adma/gnss_link"/>
     <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="velodyne_right_base_link"/>
-  </include>
+    <arg name="child_frame" value="adma/gnss_link"/>
+  </include-->
 
-  <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/gnss_link"/>
-    <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="gnss_link"/>
-  </include>
+  <!--include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
+    <arg name="ns" value="$(var parent_frame)/adma/imu_link"/>
+    <arg name="parent_frame" value="adma/gnss_link"/>
+    <arg name="child_frame" value="adma/imu_link"/>
+  </include-->
 
-  <include file="$(find-pkg-share extrinsic_manual_calibrator)/launch/calibrator.launch.xml">
-    <arg name="ns" value="$(var parent_frame)/tamagawa/imu_link"/>
-    <arg name="parent_frame" value="$(var parent_frame)"/>
-    <arg name="child_frame" value="tamagawa/imu_link"/>
-  </include>
 </launch>
